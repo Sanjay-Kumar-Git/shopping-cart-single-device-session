@@ -6,7 +6,7 @@ export const saveToken = (token)=>{
 
 export const logout = async ()=>{
  try{
-  await API.post("/users/logout")
+  await API.post("/api/users/logout")
  }catch(e){
   console.log("Logout API failed but continuing")
  }
