@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Loader2, ArrowLeft } from "lucide-react"
 import API from "../api/axios"
 import { useNavigate } from "react-router-dom"
+import OrdersSkeleton from "../components/OrdersSkeleton"
+
 
 function Orders(){
 
@@ -27,10 +29,12 @@ function Orders(){
 
  if(loading){
   return (
-   <div className="min-h-screen flex items-center justify-center bg-white">
-    <Loader2 className="animate-spin text-blue-600" size={36}/>
-   </div>
-  )
+  <div className="max-w-6xl mx-auto p-6 space-y-6">
+   {[...Array(3)].map((_,i)=>(
+    <OrdersSkeleton key={i} />
+   ))}
+  </div>
+ )
  }
 
  return (

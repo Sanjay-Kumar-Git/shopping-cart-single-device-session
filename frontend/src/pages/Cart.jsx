@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Loader2, ArrowLeft } from "lucide-react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../context/ToastContext"
+import CartSkeleton from "../components/CartSkeleton"
+
 
 function Cart() {
   const navigate = useNavigate();
@@ -9,6 +12,7 @@ function Cart() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const toast = useToast()
 
   useEffect(() => {
     loadCart();
@@ -56,10 +60,10 @@ function Cart() {
     try {
       setCheckoutLoading(true);
       await API.post("/orders");
-      alert("Order placed successfully");
+      toast.success("Order placed successfully")
       loadCart();
     } catch {
-      alert("Checkout failed");
+     toast.error("Checkout failed")
     } finally {
       setCheckoutLoading(false);
     }
@@ -67,10 +71,12 @@ function Cart() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-blue-600" size={38} />
-      </div>
-    );
+  <div className="max-w-5xl mx-auto p-6 space-y-4">
+   {[...Array(3)].map((_,i)=>(
+    <CartSkeleton key={i} />
+   ))}
+  </div>
+ );
   }
 
   const items = cart?.items || [];

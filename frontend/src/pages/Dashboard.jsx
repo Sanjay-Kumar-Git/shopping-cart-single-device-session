@@ -3,6 +3,10 @@ import { ShoppingCart, Package, LogOut, Loader2 } from "lucide-react"
 import API from "../api/axios"
 import { logout } from "../utils/auth"
 import { useNavigate } from "react-router-dom"
+import ProductSkeleton from "../components/ProductSkeleton"
+import ProductSearch from "../components/ProductSearch"
+
+
 
 function Dashboard() {
 
@@ -12,6 +16,8 @@ function Dashboard() {
  const [loading, setLoading] = useState(true)
  const [addingId, setAddingId] = useState(null)
  const [addedSuccessId, setAddedSuccessId] = useState(null)
+ const [searchTerm, setSearchTerm] = useState("")
+
 
  // ⭐ REFS FOR FLY ANIMATION
  const cartIconRef = useRef(null)
@@ -21,6 +27,11 @@ function Dashboard() {
  useEffect(() => {
   loadProducts()
  }, [])
+
+ const filteredItems = items.filter(item =>
+ item.name.toLowerCase().includes(searchTerm.toLowerCase())
+)
+
 
  const loadProducts = async () => {
   try {
@@ -102,10 +113,12 @@ function Dashboard() {
  // ================= LOADING =================
  if (loading) {
   return (
-   <div className="min-h-screen flex items-center justify-center">
-    <Loader2 className="animate-spin text-blue-600" size={40}/>
-   </div>
-  )
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6">
+   {[...Array(8)].map((_,i)=>(
+    <ProductSkeleton key={i} />
+   ))}
+  </div>
+ )
  }
 
  return (
@@ -118,6 +131,13 @@ function Dashboard() {
      <h1 className="text-2xl font-bold text-blue-600">
       ShopEase
      </h1>
+     <div className="max-w-8xl mt-5  mx-auto px-6 pb-4">
+ <ProductSearch
+  value={searchTerm}
+  onChange={setSearchTerm}
+ /> 
+</div>
+
 
      <div className="flex items-center gap-4">
 
@@ -155,13 +175,13 @@ function Dashboard() {
    {/* PRODUCTS */}
    <main className="max-w-7xl mx-auto px-6 pb-10">
 
-    {items.length === 0 && (
+    {filteredItems.length === 0 && (
      <p className="text-gray-500">No products available</p>
     )}
 
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
 
-     {items.map(item => (
+     {filteredItems.map(item => (
 
       <div
        key={item._id}
