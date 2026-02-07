@@ -20,10 +20,10 @@ function Cart() {
 
   const loadCart = async () => {
     try {
-      const res = await API.get("/carts");
+      const res = await API.get("/api/carts");
       setCart(res.data);
-    } catch {
-      console.log("Cart load failed");
+    } catch (err) {
+      console.log("Cart load failed", err);
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ function Cart() {
 
   const increaseQty = async (itemId) => {
     try {
-      await API.patch(`/carts/${itemId}/inc`);
+      await API.patch(`/api/carts/${itemId}/inc`);
       loadCart();
     } catch (err) {
       console.log(err);
@@ -40,7 +40,7 @@ function Cart() {
 
   const decreaseQty = async (itemId) => {
     try {
-      await API.patch(`/carts/${itemId}/dec`);
+      await API.patch(`/api/carts/${itemId}/dec`);
       loadCart();
     } catch (err) {
       console.log(err);
@@ -49,7 +49,7 @@ function Cart() {
 
   const removeItem = async (itemId) => {
     try {
-      await API.delete(`/carts/${itemId}`);
+      await API.delete(`/api/carts/${itemId}`);
       loadCart();
     } catch (err) {
       console.log(err);
@@ -59,7 +59,7 @@ function Cart() {
   const checkout = async () => {
     try {
       setCheckoutLoading(true);
-      await API.post("/orders");
+      await API.post("/api/orders");
       toast.success("Order placed successfully")
       loadCart();
     } catch {
