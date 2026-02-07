@@ -14,7 +14,7 @@ const auth = async (req,res,next)=>{
 
   const user = await User.findById(verified._id)
 
-  // 🔥 SINGLE DEVICE CHECK
+  // SINGLE DEVICE CHECK
   if(!user || user.token !== token){
    return res.status(401).send("Session Invalid")
   }

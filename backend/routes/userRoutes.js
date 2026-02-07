@@ -82,5 +82,19 @@ router.post("/logout", auth, async(req,res)=>{
   res.status(500).send("Logout Error")
  }
 })
+// ======================
+// GET ALL USERS
+// ======================
+router.get("/", async(req,res)=>{
+ try{
+
+  const users = await User.find().select("-password")
+  res.send(users)
+
+ }catch(err){
+  res.status(500).send("Error fetching users")
+ }
+})
+
 
 module.exports = router

@@ -43,8 +43,17 @@ Content-Type: application/json
 {
  "itemId": "69861c3570ec25c7558bad67"
 }
+###
+GET http://localhost:5000/api/carts
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTg2MTliMDM5N2E0NWJjN2I4MzY3YjciLCJpYXQiOjE3NzAzOTcwMDV9.A_rA2L5BgOoX-5vNKNioFOhSwrtJIDL5F7cN3SAN534
 
 ###
 POST http://localhost:5000/api/orders
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTg2MTliMDM5N2E0NWJjN2I4MzY3YjciLCJpYXQiOjE3NzAzOTcwMDV9.A_rA2L5BgOoX-5vNKNioFOhSwrtJIDL5F7cN3SAN534
 
+### Test for order creation with empty cart
+Get http://localhost:5000/api/orders
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTg2MTliMDM5N2E0NWJjN2I4MzY3YjciLCJpYXQiOjE3NzAzOTcwMDV9.A_rA2L5BgOoX-5vNKNioFOhSwrtJIDL5F7cN3SAN534
+
+###
+Get http://localhost:5000/api/users
