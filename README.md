@@ -156,7 +156,7 @@ shopping-cart-app
 
 
 #### Frontend (.env)
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=https://shopping-cart-single-device-session-1.onrender.com/
 
 ---
 
