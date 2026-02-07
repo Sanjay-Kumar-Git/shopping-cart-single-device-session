@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from "../src/pages/login";
-import Register from "../src/pages/register";
-import Dashboard from "../src/pages/dashboard";
-import Cart from "../src/pages/cart";
-import Orders from "../src/pages/orders";
+import Login from "../src/pages/Login";
+import Register from "../src/pages/Register";
+import Dashboard from "../src/pages/Dashboard";
+import Cart from "../src/pages/Cart";
+import Orders from "../src/pages/Orders";
 import { ToastProvider } from "./context/ToastContext";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
