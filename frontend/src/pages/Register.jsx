@@ -55,7 +55,7 @@ function Register() {
 
   try {
 
-   await API.post("/users", {
+   await API.post("/api/users", {
     username: form.email.trim(),
     password: form.password
    })
