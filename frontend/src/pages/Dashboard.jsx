@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { ShoppingCart, Package, LogOut, Loader2 } from "lucide-react"
 import API from "../api/axios"
 import { logout } from "../utils/auth"
@@ -11,6 +11,11 @@ function Dashboard() {
  const [items, setItems] = useState([])
  const [loading, setLoading] = useState(true)
  const [addingId, setAddingId] = useState(null)
+ const [addedSuccessId, setAddedSuccessId] = useState(null)
+
+ // ⭐ REFS FOR FLY ANIMATION
+ const cartIconRef = useRef(null)
+ const productImgRefs = useRef({})
 
  // ================= FETCH PRODUCTS =================
  useEffect(() => {
@@ -28,11 +33,56 @@ function Dashboard() {
   }
  }
 
+ // ================= AMAZON FLY ANIMATION =================
+ const flyToCart = (id) => {
+
+  const img = productImgRefs.current[id]
+  const cart = cartIconRef.current
+
+  if (!img || !cart) return
+
+  const imgRect = img.getBoundingClientRect()
+  const cartRect = cart.getBoundingClientRect()
+
+  const clone = img.cloneNode(true)
+
+  clone.style.position = "fixed"
+  clone.style.left = imgRect.left + "px"
+  clone.style.top = imgRect.top + "px"
+  clone.style.width = imgRect.width + "px"
+  clone.style.height = imgRect.height + "px"
+  clone.style.zIndex = 9999
+  clone.style.pointerEvents = "none"
+  clone.style.transition = "all 0.8s cubic-bezier(.2,.8,.2,1)"
+
+  document.body.appendChild(clone)
+
+  requestAnimationFrame(() => {
+   clone.style.left = cartRect.left + "px"
+   clone.style.top = cartRect.top + "px"
+   clone.style.width = "40px"
+   clone.style.height = "40px"
+   clone.style.opacity = "0.5"
+  })
+
+  setTimeout(() => {
+   clone.remove()
+  }, 800)
+ }
+
  // ================= ADD TO CART =================
  const addToCart = async (id) => {
   try {
    setAddingId(id)
+
+   // ⭐ TRIGGER FLY ANIMATION
+   flyToCart(id)
+
    await API.post("/carts", { itemId: id })
+
+   setAddedSuccessId(id)
+   setTimeout(() => setAddedSuccessId(null), 800)
+
   } catch (err) {
    console.error(err)
   } finally {
@@ -40,18 +90,11 @@ function Dashboard() {
   }
  }
 
- // ================= NAVIGATE CART =================
- const goToCart = () => {
-  navigate("/cart")
- }
+ // ================= NAVIGATION =================
+ const goToCart = () => navigate("/cart")
+ const goToOrders = () => navigate("/orders")
 
- // ================= NAVIGATE ORDERS =================
- const goToOrders = () => {
-  navigate("/orders")
- }
-
- // ================= LOGOUT =================
- const handleLogout = async() => {
+ const handleLogout = async () => {
   await logout()
   navigate("/")
  }
@@ -78,7 +121,11 @@ function Dashboard() {
 
      <div className="flex items-center gap-4">
 
-      <NavBtn icon={<ShoppingCart size={16}/>} onClick={goToCart}>
+      {/* ⭐ CART ICON REF ADDED */}
+      <NavBtn
+       icon={<ShoppingCart ref={cartIconRef} size={16}/>}
+       onClick={goToCart}
+      >
        Cart
       </NavBtn>
 
@@ -98,14 +145,14 @@ function Dashboard() {
     </div>
    </header>
 
-   {/* PAGE TITLE */}
+   {/* TITLE */}
    <div className="max-w-7xl mx-auto px-6 pt-8 pb-2">
     <h2 className="text-xl font-semibold text-gray-800">
      Products
     </h2>
    </div>
 
-   {/* PRODUCT GRID */}
+   {/* PRODUCTS */}
    <main className="max-w-7xl mx-auto px-6 pb-10">
 
     {items.length === 0 && (
@@ -121,16 +168,16 @@ function Dashboard() {
        className="group border rounded-lg overflow-hidden hover:shadow-md transition bg-white"
       >
 
-       {/* IMAGE */}
+       {/* ⭐ IMAGE REF ADDED */}
        <div className="aspect-square bg-gray-50">
         <img
+         ref={(el) => productImgRefs.current[item._id] = el}
          src={item.imageUrl}
          alt={item.name}
          className="w-full h-full object-cover group-hover:scale-105 transition"
         />
        </div>
 
-       {/* CONTENT */}
        <div className="p-4">
 
         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
@@ -150,7 +197,9 @@ function Dashboard() {
         <button
          disabled={!item.isAvailable || addingId === item._id}
          onClick={() => addToCart(item._id)}
-         className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:bg-gray-300 text-sm font-semibold flex justify-center items-center gap-2"
+         className={`w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:bg-gray-300 text-sm font-semibold flex justify-center items-center gap-2 active:scale-95
+         ${addedSuccessId === item._id ? "scale-105 ring-2 ring-green-400 bg-green-600" : ""}
+         `}
         >
          {addingId === item._id && (
           <Loader2 size={14} className="animate-spin"/>

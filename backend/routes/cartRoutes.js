@@ -74,4 +74,83 @@ router.get("/", auth, async(req,res)=>{
  }
 })
 
+router.patch("/:itemId/inc", auth, async (req,res)=>{
+ try{
+
+  const cart = await Cart.findOne({ userId:req.user._id })
+  if(!cart) return res.status(404).send("Cart not found")
+
+  const cartItem = cart.items.find(
+   i => i.itemId.toString() === req.params.itemId
+  )
+
+  if(!cartItem) return res.status(404).send("Item not in cart")
+
+  const item = await Item.findById(req.params.itemId)
+
+  cartItem.quantity += 1
+  cartItem.totalPrice = cartItem.quantity * item.price
+
+  await cart.save()
+
+  res.send(cart)
+
+ }catch(err){
+  res.status(500).send("Increase qty failed")
+ }
+})
+
+router.patch("/:itemId/dec", auth, async (req,res)=>{
+ try{
+
+  const cart = await Cart.findOne({ userId:req.user._id })
+  if(!cart) return res.status(404).send("Cart not found")
+
+  const cartItemIndex = cart.items.findIndex(
+   i => i.itemId.toString() === req.params.itemId
+  )
+
+  if(cartItemIndex === -1)
+   return res.status(404).send("Item not in cart")
+
+  const item = await Item.findById(req.params.itemId)
+
+  cart.items[cartItemIndex].quantity -= 1
+
+  if(cart.items[cartItemIndex].quantity <= 0){
+   cart.items.splice(cartItemIndex,1)
+  }else{
+   cart.items[cartItemIndex].totalPrice =
+    cart.items[cartItemIndex].quantity * item.price
+  }
+
+  await cart.save()
+
+  res.send(cart)
+
+ }catch(err){
+  res.status(500).send("Decrease qty failed")
+ }
+})
+
+router.delete("/:itemId", auth, async (req,res)=>{
+ try{
+
+  const cart = await Cart.findOne({ userId:req.user._id })
+  if(!cart) return res.status(404).send("Cart not found")
+
+  cart.items = cart.items.filter(
+   i => i.itemId.toString() !== req.params.itemId
+  )
+
+  await cart.save()
+
+  res.send(cart)
+
+ }catch(err){
+  res.status(500).send("Remove item failed")
+ }
+})
+
+
 module.exports = router
