@@ -10,9 +10,12 @@ router.post("/", async(req,res)=>{
  try{
 
   const item = new Item({
-   name: req.body.name,
-   price: req.body.price,
-   isAvailable: req.body.isAvailable ?? true
+   name:req.body.name,
+   price:req.body.price,
+   isAvailable:req.body.isAvailable ?? true,
+   imageUrl:req.body.imageUrl,
+   description:req.body.description,
+   category:req.body.category
   })
 
   await item.save()
@@ -22,7 +25,6 @@ router.post("/", async(req,res)=>{
   res.status(500).send("Error creating item")
  }
 })
-
 
 
 // ======================

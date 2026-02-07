@@ -24,10 +24,14 @@ POST http://localhost:5000/api/items
 Content-Type: application/json
 
 {
- "name": "PS5",
- "price": 50000,
- "isAvailable": false
+ "name": "iPhone 15",
+ "price": 80000,
+ "isAvailable": true,
+ "imageUrl": "https://vsprod.vijaysales.com/media/catalog/product/2/2/220949-image1_2.jpg?optimize=medium&fit=bounds&height=500&width=500",
+ "description": "Latest Apple smartphone with A16 chip",
+ "category": "electronics"
 }
+
 
 
 
