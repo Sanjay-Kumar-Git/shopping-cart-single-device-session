@@ -89,7 +89,7 @@ function Dashboard() {
    // ⭐ TRIGGER FLY ANIMATION
    flyToCart(id)
 
-   await API.post("/carts", { itemId: id })
+   await API.post("/api/carts", { itemId: id })
 
    setAddedSuccessId(id)
    setTimeout(() => setAddedSuccessId(null), 800)

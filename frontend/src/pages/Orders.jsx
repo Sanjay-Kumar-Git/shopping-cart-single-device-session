@@ -18,10 +18,10 @@ function Orders(){
 
  const loadOrders = async ()=>{
   try{
-   const res = await API.get("/orders")
+   const res = await API.get("/api/orders")
    setOrders(res.data || [])
-  }catch{
-   console.log("Orders load failed")
+  }catch(err){
+   console.log("Orders load failed", err)
   }finally{
    setLoading(false)
   }
