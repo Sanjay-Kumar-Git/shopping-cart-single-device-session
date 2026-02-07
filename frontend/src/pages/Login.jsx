@@ -27,7 +27,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await API.post("/users/login", { username, password });
+      const res = await API.post("/api/users/login", { username, password });
       saveToken(res.data.token);
       navigate("/dashboard");
     } catch (err) {
